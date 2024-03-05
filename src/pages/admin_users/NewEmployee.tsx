@@ -105,8 +105,7 @@ export const AdminUsersCreateEmployee = () => {
 		jobId: 0,
 		schedules: [],
 	});
-
-	const [isPasswordValid, setPasswordIsValid] = useState<boolean>(false);
+	
 
 	interface ScheduleCreationStructure {
 		entryDayId: number;
@@ -156,34 +155,33 @@ export const AdminUsersCreateEmployee = () => {
 		}
 	};
 
-	const validatePassword = (input: string): void => {
+	const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
+
+	const validatePassword = (input: string) => {
 		const minLength = 12;
 		const hasUpperCase = /[A-Z]/.test(input);
 		const hasLowerCase = /[a-z]/.test(input);
-		const hasNumber = /\d/.test(input);
-		const hasSpecialChar = /[#$%&?¡!=\/+-*]/.test(input);
-	
-		const isPasswordValid =
-		  input.length >= minLength &&
-		  hasUpperCase &&
-		  hasLowerCase &&
-		  hasNumber &&
-		  hasSpecialChar;
-	
-		  setPasswordIsValid(isPasswordValid);
-	  };
+		const hasNumber = /[0-9]/.test(input);
+		const hasSpecialChar = /[#$%&¿?!¡=+*-]/.test(input);
 
-	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-		const newPassword = e.target.value;
-		validatePassword(newPassword);
+		const isValid =
+		input.length >= minLength &&
+		hasUpperCase &&
+		hasLowerCase &&
+		hasNumber &&
+		hasSpecialChar;
+
+		setIsPasswordValid(isValid);
 	};
 
-	const clearPassword = (): void => {
-		employee.password = ""
-	  };
+	const updatePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setEmployee({ ...employee, password: e.target.value });
+		validatePassword(e.target.value);
+	}
 
 	const requestCreateEmployee = () => {
 		validatePassword(employee.password)
+			
 		if (isPasswordValid) {
 			createEmployee.mutate(employee, {
 				onSuccess: () => {
@@ -192,7 +190,6 @@ export const AdminUsersCreateEmployee = () => {
 				},
 				onError: () => {
 					console.log("Error al crear el empleado");
-					clearPassword();
 				},
 			});
 		} else {
@@ -296,14 +293,14 @@ export const AdminUsersCreateEmployee = () => {
 									id="standard-adornment-amount"
 									color="warning"
 									value={employee.password}
-									onChange={(e) => setEmployee({ ...employee, password: e.target.value })}
+									onChange={updatePassword}
 								/>
-
 								{isPasswordValid ? (
         							<p style={{ color: 'green' }}>Contraseña válida</p>
       							) : (
         							<p style={{ color: 'red' }}>La contraseña no cumple con los criterios requeridos</p>
       							)}
+								
 							</FormControl>
 							<Autocomplete
 								disablePortal
