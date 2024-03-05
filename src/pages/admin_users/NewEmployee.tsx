@@ -142,7 +142,7 @@ export const AdminUsersCreateEmployee = () => {
 				setJobLabels(transformedJobs);
 			},
 		});
-	};
+	}; 
 
 	const handleAddSchedule = (newS: ScheduleCreationStructure) => {
 		if (newS) {
@@ -263,6 +263,11 @@ export const AdminUsersCreateEmployee = () => {
 									color="warning"
 									onChange={(e) => setEmployee({ ...employee, password: e.target.value })}
 								/>
+								<p
+									aria-live="assertive"
+									style={{fontSize: 12, color: "gray"}}>
+									Mínimo 12 caracteres, una mayuscula, minúscula y numero y un caracter especial (#, $, %, &, ?, ¿, !, ¡, =, /, +, -, *)
+								</p>
 							</FormControl>
 							<Autocomplete
 								disablePortal
