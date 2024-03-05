@@ -266,7 +266,7 @@ export const AdminUsersCreateEmployee = () => {
 								<p
 									aria-live="assertive"
 									style={{fontSize: 12, color: "gray"}}>
-									Mínimo 12 caracteres, una mayuscula, minúscula y numero y un caracter especial (#, $, %, &, ?, ¿, !, ¡, =, /, +, -, *)
+									Mínimo 12 caracteres, mínimo una mayúscula, una minúscula, un numero y un caracter especial (#, $, %, &, ?, ¿, !, ¡, =, /, +, -, *)
 								</p>
 							</FormControl>
 							<Autocomplete
