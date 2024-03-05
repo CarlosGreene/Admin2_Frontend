@@ -106,6 +106,8 @@ export const AdminUsersCreateEmployee = () => {
 		schedules: [],
 	});
 
+	const [isPasswordValid, setPasswordIsValid] = useState<boolean>(false);
+
 	interface ScheduleCreationStructure {
 		entryDayId: number;
 		entryTime: string;
@@ -154,16 +156,48 @@ export const AdminUsersCreateEmployee = () => {
 		}
 	};
 
+	const validatePassword = (input: string): void => {
+		const minLength = 12;
+		const hasUpperCase = /[A-Z]/.test(input);
+		const hasLowerCase = /[a-z]/.test(input);
+		const hasNumber = /\d/.test(input);
+		const hasSpecialChar = /[#$%&?¡!=\/+-*]/.test(input);
+	
+		const isPasswordValid =
+		  input.length >= minLength &&
+		  hasUpperCase &&
+		  hasLowerCase &&
+		  hasNumber &&
+		  hasSpecialChar;
+	
+		  setPasswordIsValid(isPasswordValid);
+	  };
+
+	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+		const newPassword = e.target.value;
+		validatePassword(newPassword);
+	};
+
+	const clearPassword = (): void => {
+		employee.password = ""
+	  };
+
 	const requestCreateEmployee = () => {
-		createEmployee.mutate(employee, {
-			onSuccess: () => {
-				console.log("Empleado creado con éxito");
-				navigate("/admin/employees");
-			},
-			onError: () => {
-				console.log("Error al crear el empleado");
-			},
-		});
+		validatePassword(employee.password)
+		if (isPasswordValid) {
+			createEmployee.mutate(employee, {
+				onSuccess: () => {
+					console.log("Empleado creado con éxito");
+					navigate("/admin/employees");
+				},
+				onError: () => {
+					console.log("Error al crear el empleado");
+					clearPassword();
+				},
+			});
+		} else {
+			console.log("La contraseña no cumple con los criterios requeridos");
+		}
 	};
 
 	const setEmployeeSalary = (salary: string) => {
@@ -261,8 +295,15 @@ export const AdminUsersCreateEmployee = () => {
 								<Input
 									id="standard-adornment-amount"
 									color="warning"
+									value={employee.password}
 									onChange={(e) => setEmployee({ ...employee, password: e.target.value })}
 								/>
+
+								{isPasswordValid ? (
+        							<p style={{ color: 'green' }}>Contraseña válida</p>
+      							) : (
+        							<p style={{ color: 'red' }}>La contraseña no cumple con los criterios requeridos</p>
+      							)}
 							</FormControl>
 							<Autocomplete
 								disablePortal
