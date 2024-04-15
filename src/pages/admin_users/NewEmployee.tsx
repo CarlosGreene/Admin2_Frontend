@@ -295,6 +295,11 @@ export const AdminUsersCreateEmployee = () => {
 									value={employee.password}
 									onChange={updatePassword}
 								/>
+								<p
+									aria-live="assertive"
+									style={{fontSize: 12, color: "gray"}}>
+									Mínimo 12 caracteres, mínimo una mayúscula, una minúscula, un numero, un caracter especial (#, $, %, &, ?, ¿, !, ¡, =, /, +, -, *) y sin espacios
+								</p>
 								{isPasswordValid ? (
         							<p style={{ color: 'green' }}>Contraseña válida</p>
       							) : (
